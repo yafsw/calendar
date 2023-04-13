@@ -6,7 +6,7 @@ import AddEvent from "../molecules/AddEvent";
 
 export default function Header() {
   return (
-    <Flex align="center" justify="space-between">
+    <Flex align="center" justify="space-between" as="header">
       <HStack spacing="4">
         <TodaySetter />
         <MonthSetter />
