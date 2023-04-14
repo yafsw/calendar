@@ -114,9 +114,9 @@ function EventModal({ isOpen, onClose, date, data }: EventModalProps) {
   const isActionDisable = useMemo(() => {
     const events = getEventList?.(watch("time")) || [];
 
-    return events?.length >= 2 && data?.time !== watch("time");
+    return events?.length >= 3;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getEventList, watch("time")]);
+  }, [getEventList?.(watch("time")), watch]);
 
   return (
     <Modal {...{ isOpen, onClose }}>

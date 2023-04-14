@@ -36,7 +36,7 @@ function EventActions({
         </Button>
         <Tooltip hasArrow label={isActionDisable && "Max 3 events per day"}>
           <Button
-            isDisabled={isActionDisable}
+            isDisabled={isDeletable ? false : isActionDisable}
             name={isDeletable ? "edit" : "add"}
             type="submit"
             size="md"
