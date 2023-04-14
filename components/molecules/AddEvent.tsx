@@ -7,8 +7,9 @@ import EventModal from "./EventModal";
 import useStore from "@/store";
 
 export default function AddEvent() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const currentDate = useStore((state) => state.currentDate) || todayDate;
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>

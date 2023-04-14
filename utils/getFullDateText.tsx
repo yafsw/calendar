@@ -1,7 +1,9 @@
+import { dateTextFormat } from "./constants";
+
 import moment from "moment";
 
 export default function getFullDateText(date: string) {
-  const dateText = moment(date).format("dddd, D MMMM YYYY - HH:mm");
+  const dateText = moment(date).format(dateTextFormat);
 
   return dateText;
 }

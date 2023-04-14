@@ -2,11 +2,12 @@ import {
   defaultWhiteColor,
   outMonthTextColor,
   inMonthTextColor,
-  todayDate,
   defaultColor,
+  todayDate,
 } from "@/utils/constants";
 import { Heading } from "@chakra-ui/react";
 import { useMemo } from "react";
+
 import isCurrentMonth from "@/utils/isCurrentMonth";
 import isTodayDate from "@/utils/isTodayDate";
 import useStore from "@/store";

@@ -1,10 +1,10 @@
 import { Tag, Text, useDisclosure } from "@chakra-ui/react";
 import { randomColor } from "@/utils/constants";
 import { memo } from "react";
+
 import EventModal from "./EventModal";
 
 interface EventInformationProps {
-  events: { email: string }[];
   noOfLines: number;
   index: number;
   name: string;

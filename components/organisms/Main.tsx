@@ -1,6 +1,7 @@
 import { Grid } from "@chakra-ui/react";
-import AllDaysName from "../molecules/AllDaysName";
+
 import MonthCalendar from "../molecules/MonthCalendar";
+import AllDaysName from "../molecules/AllDaysName";
 
 export default function Section() {
   return (

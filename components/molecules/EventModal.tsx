@@ -104,7 +104,6 @@ function EventModal({ isOpen, onClose, date, data }: EventModalProps) {
       }
     }
 
-    // addEvent && addEvent(payload);
     resetEvent();
   }
 

@@ -1,9 +1,7 @@
 export default function getCurrentDateTime(currentDate: string) {
   const time = new Date().toISOString().split(":");
 
-  const [date] = currentDate.split(":");
-
-  time[0] = date;
+  time[0] = currentDate.split(":")[0];
 
   const dateTime = time.join(":");
 

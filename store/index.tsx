@@ -1,4 +1,4 @@
-import { localStorageName, todayDate } from "@/utils/constants";
+import { dateIDFormat, localStorageName, todayDate } from "@/utils/constants";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { chain, cloneDeep, compact, findIndex } from "lodash";
 import { create } from "zustand";
@@ -8,17 +8,17 @@ import moment from "moment";
 interface Event {
   invitees: { email: string }[];
   index?: number;
-  events: any[];
   name: string;
   time: string;
 }
 interface Store {
-  currentDate: string;
   eventList: { id: string; events: Event[] }[];
   getEventList: (date: string) => Event[];
-  editEvent: (data: any, Paylod: Event) => void;
-  addEvent: (payload: Event) => void;
   deleteEvent: (data: any) => void;
+  addEvent: (payload: Event) => void;
+  editEvent: (data: any, Paylod: Event) => void;
+
+  currentDate: string;
   setTodayDate: () => void;
   setPrevMonth: () => void;
   setNextMonth: () => void;
@@ -28,9 +28,8 @@ const useStore = create(
   persist<Partial<Store>>(
     (set, get) => ({
       eventList: [],
-      currentDate: todayDate,
       getEventList: (date) => {
-        const curentID = moment(date).format("YYYYMMDD");
+        const curentID = moment(date).format(dateIDFormat);
         const events: any = chain(get().eventList)
           .filter({ id: curentID })
           .head()
@@ -39,22 +38,8 @@ const useStore = create(
 
         return events;
       },
-      addEvent: (payload) => {
-        const eventId = moment(payload.time).format("YYYYMMDD");
-        const eventIndex = findIndex(get().eventList, { id: eventId });
-
-        const newEventList = cloneDeep(get().eventList) || [];
-
-        if (eventIndex === -1) {
-          newEventList.push({ id: eventId, events: [payload] });
-        } else {
-          newEventList[eventIndex].events.push(payload);
-        }
-
-        set({ eventList: newEventList });
-      },
       deleteEvent: (data) => {
-        const eventId = moment(data.time).format("YYYYMMDD");
+        const eventId = moment(data.time).format(dateIDFormat);
         const eventIndex = findIndex(get().eventList, { id: eventId });
 
         const newEventList = cloneDeep(get().eventList) || [];
@@ -70,9 +55,23 @@ const useStore = create(
 
         set({ eventList: compact(newEventList) });
       },
+      addEvent: (payload) => {
+        const eventId = moment(payload.time).format(dateIDFormat);
+        const eventIndex = findIndex(get().eventList, { id: eventId });
+
+        const newEventList = cloneDeep(get().eventList) || [];
+
+        if (eventIndex === -1) {
+          newEventList.push({ id: eventId, events: [payload] });
+        } else {
+          newEventList[eventIndex].events.push(payload);
+        }
+
+        set({ eventList: newEventList });
+      },
       editEvent: (data, { index, ...payload }) => {
-        const oldEventId = moment(data.time).format("YYYYMMDD");
-        const newEventId = moment(payload.time).format("YYYYMMDD");
+        const oldEventId = moment(data.time).format(dateIDFormat);
+        const newEventId = moment(payload.time).format(dateIDFormat);
         const oldEventIndex = findIndex(get().eventList, { id: oldEventId });
         const newEventIndex = findIndex(get().eventList, { id: newEventId });
 
@@ -95,6 +94,8 @@ const useStore = create(
 
         set({ eventList: compact(newEventList) });
       },
+
+      currentDate: todayDate,
       setTodayDate: () => set({ currentDate: todayDate }),
       setPrevMonth: () =>
         set({
@@ -109,6 +110,7 @@ const useStore = create(
             .toISOString(),
         }),
     }),
+
     {
       name: localStorageName, // name of the item in the storage (must be unique)
       storage: createJSONStorage(() => localStorage),
