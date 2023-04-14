@@ -13,10 +13,11 @@ import useStore from "@/store";
 import moment from "moment";
 
 interface DateTitleProps {
+  onClick: any;
   date: string;
 }
 
-export default function DateTitle({ date }: DateTitleProps) {
+export default function DateTitle({ date, onClick }: DateTitleProps) {
   const currentDate = useStore((state) => state.currentDate) || todayDate;
 
   const color = useMemo(() => {
@@ -37,10 +38,12 @@ export default function DateTitle({ date }: DateTitleProps) {
 
   return (
     <Heading
-      {...{ color, bgColor }}
+      {...{ color, bgColor, onClick }}
       borderEndStartRadius="md"
       position="absolute"
+      textAlign="center"
       fontSize="md"
+      zIndex="99"
       right="0"
       w="36px"
       h="36px"

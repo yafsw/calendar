@@ -1,6 +1,8 @@
-import { Card, Grid, Tag, Text } from "@chakra-ui/react";
-import { randomColor } from "@/utils/constants";
-import { memo, useMemo } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
+import { Box, Card, Grid, useDisclosure } from "@chakra-ui/react";
+
+import EventInformation from "./EventInformation";
+import EventModal from "./EventModal";
 import DateTitle from "./DateTitle";
 import useStore from "@/store";
 
@@ -11,38 +13,53 @@ interface DayInformationProps {
 
 function DayInformation({ index, date }: DayInformationProps) {
   const getEventList = useStore((state) => state.getEventList);
+  const eventList = useStore((state) => state.eventList);
 
-  const eventList = useMemo(() => {
-    const events = getEventList ? getEventList(date) : [];
+  const [show, setShow] = useState(false);
+
+  const events = useMemo(() => {
+    const events = eventList && getEventList ? getEventList(date) : [];
 
     return events;
-  }, [date, getEventList]);
+  }, [date, getEventList, eventList]);
 
-  return (
-    <Card
-      borderLeft={(index % 7 !== 0 && "none") || ""}
-      position="relative"
-      variant="outline"
-      borderRadius="0"
-      borderTop="none"
-      h="136px"
-    >
-      <DateTitle date={date} />
-      <Grid templateRows={`repeat(${eventList.length}, 1fr)`} h="100%">
-        {eventList.map(({ name }, index) => (
-          <Tag
-            key={index}
-            colorScheme={randomColor[index]}
-            borderRadius="0"
-            display="block"
-            size="md"
-            p="6px"
-          >
-            <Text noOfLines={5 - eventList.length}>{name}</Text>
-          </Tag>
-        ))}
-      </Grid>
-    </Card>
+  useEffect(() => {
+    setShow(true);
+  }, []);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  return !show ? null : (
+    <>
+      <Card
+        borderLeft={(index % 7 !== 0 && "none") || ""}
+        position="relative"
+        variant="outline"
+        borderRadius="0"
+        borderTop="none"
+        cursor="pointer"
+        h="136px"
+      >
+        <Box
+          onClick={onOpen}
+          position="absolute"
+          bgColor="white"
+          w="100%"
+          h="100%"
+        />
+        <DateTitle date={date} onClick={onOpen} />
+        <Grid templateRows={`repeat(${events.length}, 1fr)`} h="100%">
+          {events.map((item, index) => (
+            <EventInformation
+              {...{ ...item, index }}
+              noOfLines={5 - events.length}
+              key={index}
+            />
+          ))}
+        </Grid>
+      </Card>
+      <EventModal {...{ isOpen, onClose, date }} />
+    </>
   );
 }
 
